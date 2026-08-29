@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMS | Doctor Management</title>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <style>
+:root {
+  --navy: #0b3042;
+  --teal: #07879a;
+  --green: #09ad9c;
+  --light-bg: #f4f8f8;
+  --border: #d9e6e7;
+  --text: #123247;
+  --muted: #6b7f8a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f6f9fa;
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: var(--navy);
+  color: #fff;
+  padding: 24px 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1030;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 8px; }
+.brand-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: #0a8a9d; display: grid; place-items: center; font-size: 21px;
+}
+.brand small { color: #b9d0d7; }
+
+.nav-link {
+  color: #c9d9de;
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 4px;
+}
+.nav-link i { width: 26px; }
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,.10); color: #fff; }
+.nav-link.active { border-left: 3px solid #12b8a6; }
+
+.sidebar-footer {
+  position: absolute;
+  left: 16px; right: 16px; bottom: 20px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 16px;
+}
+.user-mini { display: flex; align-items: center; gap: 10px; }
+.user-mini small { display: block; color: #a9c0c7; }
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: #e7f4f3; color: var(--navy);
+  display: grid; place-items: center; font-weight: 700;
+}
+
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 30px 34px 20px;
+}
+
+.topbar {
+  display: flex; justify-content: space-between; gap: 20px;
+  align-items: flex-start; margin-bottom: 28px;
+}
+.eyebrow {
+  display: block; color: #0b8b9d; font-size: 12px;
+  font-weight: 800; letter-spacing: 2px; margin-bottom: 5px;
+}
+.topbar h1 { font-family: Georgia, serif; font-size: 36px; margin: 0; color: var(--navy); }
+.top-actions { display: flex; gap: 10px; }
+
+.btn-primary {
+  background: var(--teal); border-color: var(--teal);
+}
+.btn-primary:hover { background: #067384; border-color: #067384; }
+
+.stat-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 4px 15px rgba(11,48,66,.04);
+}
+.stat-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 20px;
+}
+.stat-icon.total { background: #e4f3f5; color: var(--teal); }
+.stat-icon.pending { background: #fff3cd; color: #856404; }
+.stat-icon.active { background: #e4f8f4; color: #08a995; }
+.stat-icon.expiring { background: #fde9e9; color: #b23a3a; }
+.stat-card small { color: var(--muted); }
+.stat-card h3 { margin: 2px 0 0; color: var(--navy); }
+
+.panel {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+  box-shadow: 0 4px 15px rgba(11,48,66,.035);
+}
+.panel-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.panel-header h5 { margin: 0; color: var(--navy); font-weight: 700; }
+.form-label { font-size: 13px; font-weight: 600; color: #405a66; }
+.form-control, .form-select { border-color: #d3e0e3; border-radius: 9px; }
+
+.doctor-table th {
+  background: #f4f8f8; color: #617783; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+}
+.doctor-table td { font-size: 14px; vertical-align: middle; }
+
+.status-badge {
+  border-radius: 30px; padding: 6px 9px; font-size: 10px;
+  font-weight: 800; letter-spacing: .3px; display: inline-block;
+}
+.status-PENDING { background: #fff3cd; color: #856404; }
+.status-APPROVED { background: #e4f8f4; color: #078e7d; }
+.status-ACTIVE { background: #e2f7f2; color: #08a995; }
+.status-SUSPENDED { background: #fde9e9; color: #b23a3a; }
+.status-INACTIVE { background: #e9ecef; color: #6c757d; }
+
+.action-btn { width: 32px; height: 32px; padding: 0; border-radius: 8px; }
+
+.page-footer {
+  margin-top: 24px; color: #718792; font-size: 11px;
+  letter-spacing: 1.3px;
+}
+.page-footer span { margin: 0 6px; }
+
+.notification-dot {
+  position: absolute; width: 7px; height: 7px; border-radius: 50%;
+  background: #e44; top: 8px; right: 8px;
+}
+
+.info-banner {
+  background: var(--navy); color: #fff; border-radius: 12px;
+  padding: 18px 22px; display: flex; align-items: flex-start; gap: 15px;
+}
+.info-banner i { font-size: 25px; color: #27c1b0; }
+.info-banner p { color: #d3e2e6; font-size: 14px; }
+
+@media (max-width: 991px) {
+  .sidebar { transform: translateX(-100%); transition: transform .2s; }
+  .sidebar.show { transform: translateX(0); }
+  .main-content { margin-left: 0; width: 100%; padding: 22px 18px; }
+  .topbar { flex-direction: column; }
+}
+
+@media (max-width: 576px) {
+  .topbar h1 { font-size: 29px; }
+}
+
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-hospital"></i></div>
+      <div>
+        <h5 class="mb-0">HMS</h5>
+        <small>Hospital Management</small>
+      </div>
+    </div>
+
+    <nav class="nav flex-column mt-4">
+      <a class="nav-link" href="admin-dashboard.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a class="nav-link active" href="admin-doctors.html"><i class="bi bi-person-badge"></i> Doctors</a>
+      <a class="nav-link" href="admin-patients.html"><i class="bi bi-people"></i> Patients</a>
+      <a class="nav-link" href="admin-appointments.html"><i class="bi bi-calendar2-check"></i> Appointments</a>
+      <a class="nav-link" href="admin-staff.html"><i class="bi bi-people-fill"></i> Staff</a>
+      <a class="nav-link" href="admin-pharmacy.html"><i class="bi bi-capsule"></i> Pharmacy</a>
+      <a class="nav-link" href="admin-laboratory.html"><i class="bi bi-microscope"></i> Laboratory</a>
+      <a class="nav-link" href="admin-inventory.html"><i class="bi bi-box-seam"></i> Inventory</a>
+      <a class="nav-link" href="admin-billing.html"><i class="bi bi-receipt"></i> Billing</a>
+      <a class="nav-link" href="admin-reports.html"><i class="bi bi-bar-chart"></i> Reports</a>
+      <a class="nav-link" href="#"><i class="bi bi-gear"></i> Settings</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="avatar">AD</div>
+        <div>
+          <strong>Admin</strong>
+          <small>Administrator</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light d-lg-none" id="menuBtn">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <div>
+          <span class="eyebrow">ADMINISTRATOR</span>
+          <h1>Doctor Management</h1>
+          <p class="text-muted mb-0">Manage doctor profiles, approvals, and schedules.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-light position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctorModal">
+          <i class="bi bi-plus-lg me-1"></i> Add Doctor
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon total"><i class="bi bi-people"></i></div>
+          <div><small>Total Doctors</small><h3>52</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon pending"><i class="bi bi-hourglass-split"></i></div>
+          <div><small>Pending Approval</small><h3>3</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon active"><i class="bi bi-check-circle"></i></div>
+          <div><small>Active</small><h3>48</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon expiring"><i class="bi bi-exclamation-triangle"></i></div>
+          <div><small>License Expiring</small><h3>5</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="panel mb-4">
+      <div class="panel-header">
+        <div>
+          <h5>All Doctors</h5>
+          <small class="text-muted">Search and manage doctor records</small>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()">
+          <i class="bi bi-arrow-clockwise"></i> Reset
+        </button>
+      </div>
+
+      <div class="row g-2 mt-2">
+        <div class="col-lg-3">
+          <label class="form-label">Search</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="searchInput" type="text" class="form-control" placeholder="Doctor name or specialization...">
+          </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <label class="form-label">Department</label>
+          <select id="deptFilter" class="form-select">
+            <option value="">All departments</option>
+            <option>Cardiology</option>
+            <option>Neurology</option>
+            <option>Pediatrics</option>
+            <option>Orthopedics</option>
+            <option>General Medicine</option>
+          </select>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <label class="form-label">Status</label>
+          <select id="statusFilter" class="form-select">
+            <option value="">All status</option>
+            <option>PENDING</option>
+            <option>APPROVED</option>
+            <option>ACTIVE</option>
+            <option>SUSPENDED</option>
+          </select>
+        </div>
+        <div class="col-lg-5 d-flex align-items-end">
+          <button class="btn btn-dark w-100" onclick="applyFilters()">
+            <i class="bi bi-funnel me-1"></i> Apply Filters
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Doctor Table -->
+    <section class="panel mb-4">
+      <div class="panel-header">
+        <div>
+          <h5>Doctor Registry</h5>
+          <small class="text-muted"><span id="resultCount">0</span> records found</small>
+        </div>
+        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-download"></i> Export</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle doctor-table mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Doctor</th>
+              <th>Specialization</th>
+              <th>License No</th>
+              <th>Consultation Fee</th>
+              <th>Status</th>
+              <th>License Expiry</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="doctorTableBody">
+            <tr>
+              <td><strong>#D001</strong></td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar" style="width:32px;height:32px;font-size:14px;">SJ</div>
+                  <div>
+                    <div class="patient-name">Dr. Sarah Johnson</div>
+                    <small class="text-muted">sarah.j@hospital.com</small>
+                  </div>
+                </div>
+              </td>
+              <td>Cardiology</td>
+              <td>MD-2018-4521</td>
+              <td>$150</td>
+              <td><span class="status-badge status-ACTIVE">ACTIVE</span></td>
+              <td>Dec 2025</td>
+              <td class="text-end">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-light action-btn" title="View"><i class="bi bi-eye"></i></button>
+                  <button class="btn btn-light action-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                  <button class="btn btn-light action-btn text-danger" title="Suspend"><i class="bi bi-pause-circle"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>#D002</strong></td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar" style="width:32px;height:32px;font-size:14px;">MC</div>
+                  <div>
+                    <div class="patient-name">Dr. Michael Chen</div>
+                    <small class="text-muted">m.chen@hospital.com</small>
+                  </div>
+                </div>
+              </td>
+              <td>Neurology</td>
+              <td>MD-2019-7832</td>
+              <td>$180</td>
+              <td><span class="status-badge status-PENDING">PENDING</span></td>
+              <td>Mar 2026</td>
+              <td class="text-end">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-light action-btn" title="View"><i class="bi bi-eye"></i></button>
+                  <button class="btn btn-success action-btn" title="Approve"><i class="bi bi-check-lg"></i></button>
+                  <button class="btn btn-danger action-btn" title="Reject"><i class="bi bi-x-lg"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>#D003</strong></td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar" style="width:32px;height:32px;font-size:14px;">ER</div>
+                  <div>
+                    <div class="patient-name">Dr. Emily Rodriguez</div>
+                    <small class="text-muted">e.rodriguez@hospital.com</small>
+                  </div>
+                </div>
+              </td>
+              <td>Pediatrics</td>
+              <td>MD-2020-1245</td>
+              <td>$120</td>
+              <td><span class="status-badge status-PENDING">PENDING</span></td>
+              <td>Jun 2026</td>
+              <td class="text-end">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-light action-btn" title="View"><i class="bi bi-eye"></i></button>
+                  <button class="btn btn-success action-btn" title="Approve"><i class="bi bi-check-lg"></i></button>
+                  <button class="btn btn-danger action-btn" title="Reject"><i class="bi bi-x-lg"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>#D004</strong></td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="avatar" style="width:32px;height:32px;font-size:14px;">RK</div>
+                  <div>
+                    <div class="patient-name">Dr. Rajesh Kumar</div>
+                    <small class="text-muted">r.kumar@hospital.com</small>
+                  </div>
+                </div>
+              </td>
+              <td>Orthopedics</td>
+              <td>MD-2017-9876</td>
+              <td>$200</td>
+              <td><span class="status-badge status-ACTIVE">ACTIVE</span></td>
+              <td><span class="text-danger"><i class="bi bi-exclamation-circle"></i> Jan 2025</span></td>
+              <td class="text-end">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-light action-btn" title="View"><i class="bi bi-eye"></i></button>
+                  <button class="btn btn-light action-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                  <button class="btn btn-light action-btn text-danger" title="Suspend"><i class="bi bi-pause-circle"></i></button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="info-banner mt-4">
+      <i class="bi bi-shield-check"></i>
+      <div>
+        <strong>Credentialing & Compliance</strong>
+        <p class="mb-0">Doctors with licenses expiring within 30 days are automatically flagged. On the expiry date, prescribing privileges are revoked until renewal.</p>
+      </div>
+    </div>
+
+    <footer class="page-footer">HOSPITAL MANAGEMENT SYSTEM <span>•</span> Doctor Management Module</footer>
+  </main>
+</div>
+
+<!-- Add/Edit Doctor Modal -->
+<div class="modal fade" id="doctorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Add New Doctor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="doctorForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Department <span class="text-danger">*</span></label>
+              <select class="form-select" required>
+                <option value="">Select department</option>
+                <option>Cardiology</option>
+                <option>Neurology</option>
+                <option>Pediatrics</option>
+                <option>Orthopedics</option>
+                <option>General Medicine</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Specialization</label>
+              <input type="text" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">License Number <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">License Expiry <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Consultation Fee</label>
+              <input type="number" class="form-control" placeholder="0.00">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Upload Documents</label>
+              <input type="file" class="form-control" multiple>
+              <small class="text-muted">Medical Degree, Board Registration, Malpractice Insurance</small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Save Doctor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById("menuBtn")?.addEventListener("click", () => {
+  document.getElementById("sidebar").classList.toggle("show");
+});
+
+function applyFilters() {
+  // Filter logic would go here
+  document.getElementById("resultCount").textContent = "4";
+}
+
+function resetFilters() {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("deptFilter").value = "";
+  document.getElementById("statusFilter").value = "";
+  applyFilters();
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # Web project specific ignores
-*.html
+# *.html (uncomment if needed)
 *.css
 *.js
 *.map
