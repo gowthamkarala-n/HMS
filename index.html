@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMS | Hospital Management System</title>
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <style>
+:root {
+  --navy: #0b3042;
+  --teal: #07879a;
+  --green: #09ad9c;
+  --light-bg: #f4f8f8;
+  --border: #d9e6e7;
+  --text: #123247;
+  --muted: #6b7f8a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #f6f9fa 0%, #e8f2f3 100%);
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #0d4a5f 100%);
+  color: #fff;
+  padding: 60px 20px 40px;
+  text-align: center;
+}
+
+.hero-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.15);
+  display: grid;
+  place-items: center;
+  font-size: 40px;
+  margin: 0 auto 20px;
+}
+
+.hero-section h1 {
+  font-family: Georgia, serif;
+  font-size: 42px;
+  margin: 0 0 10px;
+  color: #fff;
+}
+
+.hero-section p {
+  color: #c9d9de;
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.container-custom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.role-section {
+  margin-bottom: 50px;
+}
+
+.role-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.role-title i {
+  font-size: 28px;
+  color: var(--teal);
+}
+
+.role-title h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 26px;
+}
+
+.role-title p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  margin-left: 40px;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.module-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(11,48,66,.04);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.module-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(11,48,66,.08);
+  border-color: var(--teal);
+}
+
+.module-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  margin-bottom: 16px;
+}
+
+.module-icon.admin { background: #e4f3f5; color: var(--teal); }
+.module-icon.doctor { background: #e4f8f4; color: #08a995; }
+.module-icon.patient { background: #e8f2f6; color: #28758b; }
+.module-icon.pharmacy { background: #e9f7ef; color: #24885b; }
+.module-icon.lab { background: #f3e8fc; color: #8b5cf6; }
+.module-icon.billing { background: #fef3c7; color: #d97706; }
+
+.module-card h3 {
+  margin: 0 0 8px;
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.module-card p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.module-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.module-features li {
+  font-size: 12px;
+  color: var(--text);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-features li i {
+  color: var(--green);
+  font-size: 11px;
+}
+
+.module-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 12px;
+  text-decoration: none;
+}
+
+.module-link:hover {
+  color: var(--navy);
+}
+
+.quick-stats {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 15px rgba(11,48,66,.04);
+}
+
+.quick-stats h3 {
+  margin: 0 0 20px;
+  color: var(--navy);
+  font-size: 20px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20px;
+  background: var(--light-bg);
+  border-radius: 12px;
+}
+
+.stat-item i {
+  font-size: 32px;
+  color: var(--teal);
+  margin-bottom: 10px;
+}
+
+.stat-item .value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--navy);
+  display: block;
+}
+
+.stat-item .label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  background: #fff;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.footer-links a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--navy);
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 { font-size: 32px; }
+  .hero-section p { font-size: 16px; }
+  .role-title { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .role-title p { margin: 0; }
+  .module-grid { grid-template-columns: 1fr; }
+}
+
+  </style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-icon">
+    <i class="bi bi-hospital"></i>
+  </div>
+  <h1>Hospital Management System</h1>
+  <p>Comprehensive healthcare management platform for hospitals, clinics, and medical facilities</p>
+</section>
+
+<div class="container-custom">
+  
+  <!-- Quick Stats -->
+  <section class="quick-stats">
+    <h3><i class="bi bi-speedometer2 me-2"></i>System Overview</h3>
+    <div class="stats-row">
+      <div class="stat-item">
+        <i class="bi bi-people"></i>
+        <span class="value">2,847</span>
+        <span class="label">Total Patients</span>
+      </div>
+      <div class="stat-item">
+        <i class="bi bi-person-badge"></i>
+        <span class="value">48</span>
+        <span class="label">Active Doctors</span>
+      </div>
+      <div class="stat-item">
+        <i class="bi bi-calendar-check"></i>
+        <span class="value">127</span>
+        <span class="label">Today's Appointments</span>
+      </div>
+      <div class="stat-item">
+        <i class="bi bi-capsule"></i>
+        <span class="value">1,245</span>
+        <span class="label">Medicines in Stock</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-gear-fill"></i>
+      <div>
+        <h2>Administrator</h2>
+        <p>Full system access with oversight and management capabilities</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="pages/admin-dashboard.html" class="module-card">
+        <div class="module-icon admin">
+          <i class="bi bi-grid-1x2"></i>
+        </div>
+        <h3>Admin Dashboard</h3>
+        <p>Overview of hospital operations, key metrics, and critical alerts requiring attention.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Real-time KPI monitoring</li>
+          <li><i class="bi bi-check-circle-fill"></i> Pending approvals queue</li>
+          <li><i class="bi bi-check-circle-fill"></i> Critical alerts & notifications</li>
+          <li><i class="bi bi-check-circle-fill"></i> Department-wise analytics</li>
+        </ul>
+        <span class="module-link">Access Dashboard <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="pages/admin-doctors.html" class="module-card">
+        <div class="module-icon admin">
+          <i class="bi bi-person-badge"></i>
+        </div>
+        <h3>Doctor Management</h3>
+        <p>Manage doctor profiles, credentials, approvals, and department assignments.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Credential verification workflow</li>
+          <li><i class="bi bi-check-circle-fill"></i> License tracking & expiry alerts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Department & specialization setup</li>
+          <li><i class="bi bi-check-circle-fill"></i> Availability & schedule management</li>
+        </ul>
+        <span class="module-link">Manage Doctors <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="pages/admin-pharmacy.html" class="module-card">
+        <div class="module-icon admin">
+          <i class="bi bi-capsule"></i>
+        </div>
+        <h3>Pharmacy Module</h3>
+        <p>Prescription dispensing, inventory control with FEFO allocation.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Prescription queue management</li>
+          <li><i class="bi bi-check-circle-fill"></i> FEFO (First Expiry First Out)</li>
+          <li><i class="bi bi-check-circle-fill"></i> Expiry & reorder alerts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Batch & stock tracking</li>
+        </ul>
+        <span class="module-link">Access Pharmacy <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="pages/admin-laboratory.html" class="module-card">
+        <div class="module-icon admin">
+          <i class="bi bi-microscope"></i>
+        </div>
+        <h3>Laboratory Module</h3>
+        <p>Sample collection, test processing, and report generation with TAT tracking.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Sample barcode tracking</li>
+          <li><i class="bi bi-check-circle-fill"></i> TAT (Turnaround Time) monitoring</li>
+          <li><i class="bi bi-check-circle-fill"></i> Critical value alerts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Digital report generation</li>
+        </ul>
+        <span class="module-link">Access Laboratory <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Doctor Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-stethoscope"></i>
+      <div>
+        <h2>Doctor</h2>
+        <p>Clinical workflow for patient care, prescriptions, and records</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="#" class="module-card">
+        <div class="module-icon doctor">
+          <i class="bi bi-calendar2-check"></i>
+        </div>
+        <h3>Appointment Management</h3>
+        <p>View scheduled appointments, manage patient queue, and track visit status.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Today's appointment list</li>
+          <li><i class="bi bi-check-circle-fill"></i> Patient check-in tracking</li>
+          <li><i class="bi bi-check-circle-fill"></i> Status lifecycle management</li>
+          <li><i class="bi bi-check-circle-fill"></i> No-show handling</li>
+        </ul>
+        <span class="module-link">View Appointments <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon doctor">
+          <i class="bi bi-file-earmark-medical"></i>
+        </div>
+        <h3>Electronic Medical Records</h3>
+        <p>Patient history, clinical notes, diagnosis, and treatment documentation.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> SOAP notes format</li>
+          <li><i class="bi bi-check-circle-fill"></i> Diagnosis coding (ICD-10)</li>
+          <li><i class="bi bi-check-circle-fill"></i> Treatment history timeline</li>
+          <li><i class="bi bi-check-circle-fill"></i> Allergy & medication alerts</li>
+        </ul>
+        <span class="module-link">Access EMR <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon doctor">
+          <i class="bi bi-prescription2"></i>
+        </div>
+        <h3>e-Prescription</h3>
+        <p>Digital prescription creation with drug interaction checks and dosage guidance.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Drug interaction screening</li>
+          <li><i class="bi bi-check-circle-fill"></i> Dosage calculator</li>
+          <li><i class="bi bi-check-circle-fill"></i> Template-based prescribing</li>
+          <li><i class="bi bi-check-circle-fill"></i> Direct pharmacy integration</li>
+        </ul>
+        <span class="module-link">Create Prescription <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon doctor">
+          <i class="bi bi-file-earmark-text"></i>
+        </div>
+        <h3>Lab Order Management</h3>
+        <p>Request diagnostic tests, view results, and track sample status.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Test order creation</li>
+          <li><i class="bi bi-check-circle-fill"></i> Priority marking (STAT/Routine)</li>
+          <li><i class="bi bi-check-circle-fill"></i> Result notification</li>
+          <li><i class="bi bi-check-circle-fill"></i> Historical comparison</li>
+        </ul>
+        <span class="module-link">Order Tests <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Patient Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-heart-pulse"></i>
+      <div>
+        <h2>Patient</h2>
+        <p>Self-service portal for appointments, records, and billing</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="#" class="module-card">
+        <div class="module-icon patient">
+          <i class="bi bi-calendar-plus"></i>
+        </div>
+        <h3>Book Appointment</h3>
+        <p>Schedule visits with doctors based on real-time availability.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Doctor & department search</li>
+          <li><i class="bi bi-check-circle-fill"></i> Available slot selection</li>
+          <li><i class="bi bi-check-circle-fill"></i> Auto-reminders (SMS/Email)</li>
+          <li><i class="bi bi-check-circle-fill"></i> Reschedule & cancel</li>
+        </ul>
+        <span class="module-link">Book Now <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon patient">
+          <i class="bi bi-folder2-open"></i>
+        </div>
+        <h3>My Health Records</h3>
+        <p>Access your medical history, prescriptions, and lab reports anytime.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Visit history timeline</li>
+          <li><i class="bi bi-check-circle-fill"></i> Download prescriptions</li>
+          <li><i class="bi bi-check-circle-fill"></i> Lab report repository</li>
+          <li><i class="bi bi-check-circle-fill"></i> Vaccination records</li>
+        </ul>
+        <span class="module-link">View Records <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon patient">
+          <i class="bi bi-receipt"></i>
+        </div>
+        <h3>Billing & Payments</h3>
+        <p>View invoices, make payments, and track insurance claims.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Itemized bill breakdown</li>
+          <li><i class="bi bi-check-circle-fill"></i> Online payment gateway</li>
+          <li><i class="bi bi-check-circle-fill"></i> Insurance claim status</li>
+          <li><i class="bi bi-check-circle-fill"></i> Payment history</li>
+        </ul>
+        <span class="module-link">Pay Bills <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Pharmacy Staff Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-mortarboard"></i>
+      <div>
+        <h2>Pharmacist</h2>
+        <p>Dispensing workflow and inventory management</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="pages/admin-pharmacy.html" class="module-card">
+        <div class="module-icon pharmacy">
+          <i class="bi bi-basket"></i>
+        </div>
+        <h3>Prescription Dispensing</h3>
+        <p>Process prescriptions with automated FEFO medicine allocation.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Queue-based processing</li>
+          <li><i class="bi bi-check-circle-fill"></i> FEFO batch selection</li>
+          <li><i class="bi bi-check-circle-fill"></i> Substitution alerts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Patient counseling notes</li>
+        </ul>
+        <span class="module-link">Dispense Medicines <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon pharmacy">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <h3>Inventory Management</h3>
+        <p>Stock tracking, purchase orders, and supplier management.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Real-time stock levels</li>
+          <li><i class="bi bi-check-circle-fill"></i> Automated reorder points</li>
+          <li><i class="bi bi-check-circle-fill"></i> GRN (Goods Receipt Note)</li>
+          <li><i class="bi bi-check-circle-fill"></i> Supplier performance</li>
+        </ul>
+        <span class="module-link">Manage Inventory <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Laboratory Staff Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-test-tube"></i>
+      <div>
+        <h2>Laboratory Technician</h2>
+        <p>Sample processing and result entry workflow</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="pages/admin-laboratory.html" class="module-card">
+        <div class="module-icon lab">
+          <i class="bi bi-droplet"></i>
+        </div>
+        <h3>Sample Collection</h3>
+        <p>Barcode-based sample tracking from collection to processing.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Barcode label generation</li>
+          <li><i class="bi bi-check-circle-fill"></i> Chain of custody logging</li>
+          <li><i class="bi bi-check-circle-fill"></i> Sample rejection criteria</li>
+          <li><i class="bi bi-check-circle-fill"></i> Phlebotomist assignment</li>
+        </ul>
+        <span class="module-link">Collect Samples <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon lab">
+          <i class="bi bi-clipboard-data"></i>
+        </div>
+        <h3>Result Entry</h3>
+        <p>Enter test results with auto-validation and flagging.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Range validation</li>
+          <li><i class="bi bi-check-circle-fill"></i> Delta check alerts</li>
+          <li><i class="bi bi-check-circle-fill"></i> Critical value flagging</li>
+          <li><i class="bi bi-check-circle-fill"></i> Pathologist verification</li>
+        </ul>
+        <span class="module-link">Enter Results <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Billing Staff Modules -->
+  <section class="role-section">
+    <div class="role-title">
+      <i class="bi bi-cash-coin"></i>
+      <div>
+        <h2>Billing Staff</h2>
+        <p>Invoice generation, payment processing, and insurance claims</p>
+      </div>
+    </div>
+    
+    <div class="module-grid">
+      <a href="#" class="module-card">
+        <div class="module-icon billing">
+          <i class="bi bi-file-earmark-spreadsheet"></i>
+        </div>
+        <h3>Invoice Generation</h3>
+        <p>Create itemized bills for consultations, procedures, and medicines.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Auto-populated charges</li>
+          <li><i class="bi bi-check-circle-fill"></i> Discount & package pricing</li>
+          <li><i class="bi bi-check-circle-fill"></i> Tax calculation</li>
+          <li><i class="bi bi-check-circle-fill"></i> Print/email invoices</li>
+        </ul>
+        <span class="module-link">Generate Invoice <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon billing">
+          <i class="bi bi-credit-card"></i>
+        </div>
+        <h3>Payment Processing</h3>
+        <p>Accept multiple payment modes and reconcile transactions.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Cash/Card/UPI payments</li>
+          <li><i class="bi bi-check-circle-fill"></i> Partial payment handling</li>
+          <li><i class="bi bi-check-circle-fill"></i> Refund processing</li>
+          <li><i class="bi bi-check-circle-fill"></i> Daily collection summary</li>
+        </ul>
+        <span class="module-link">Process Payments <i class="bi bi-arrow-right"></i></span>
+      </a>
+
+      <a href="#" class="module-card">
+        <div class="module-icon billing">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <h3>Insurance & TPA</h3>
+        <p>Manage insurance claims, pre-authorizations, and TPA coordination.</p>
+        <ul class="module-features">
+          <li><i class="bi bi-check-circle-fill"></i> Eligibility verification</li>
+          <li><i class="bi bi-check-circle-fill"></i> Pre-auth requests</li>
+          <li><i class="bi bi-check-circle-fill"></i> Claim submission tracking</li>
+          <li><i class="bi bi-check-circle-fill"></i> Rejection & appeal management</li>
+        </ul>
+        <span class="module-link">Manage Claims <i class="bi bi-arrow-right"></i></span>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#"><i class="bi bi-info-circle me-1"></i> About HMS</a>
+    <a href="#"><i class="bi bi-question-circle me-1"></i> Help & Support</a>
+    <a href="#"><i class="bi bi-envelope me-1"></i> Contact Us</a>
+    <a href="#"><i class="bi bi-shield-lock me-1"></i> Privacy Policy</a>
+  </div>
+  <p class="mb-0">&copy; 2025 Hospital Management System. All rights reserved.</p>
+  <p class="mb-0 mt-1"><small>Built with Bootstrap 5 • Responsive Design • HIPAA Compliant Architecture</small></p>
+</footer>
+
+<script>
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
