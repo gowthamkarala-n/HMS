@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMS | Appointment Management</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+/* HMS Appointment Management
+   Bootstrap handles layout/utilities; this file handles the HMS visual design.
+*/
+:root {
+  --navy: #0b3042;
+  --teal: #07879a;
+  --green: #09ad9c;
+  --light-bg: #f4f8f8;
+  --border: #d9e6e7;
+  --text: #123247;
+  --muted: #6b7f8a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f6f9fa;
+  color: var(--text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: var(--navy);
+  color: #fff;
+  padding: 24px 16px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1030;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; padding: 0 8px; }
+.brand-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: #0a8a9d; display: grid; place-items: center; font-size: 21px;
+}
+.brand small { color: #b9d0d7; }
+
+.nav-link {
+  color: #c9d9de;
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 4px;
+}
+.nav-link i { width: 26px; }
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,.10); color: #fff; }
+.nav-link.active { border-left: 3px solid #12b8a6; }
+
+.sidebar-footer {
+  position: absolute;
+  left: 16px; right: 16px; bottom: 20px;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 16px;
+}
+.user-mini { display: flex; align-items: center; gap: 10px; }
+.user-mini small { display: block; color: #a9c0c7; }
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: #e7f4f3; color: var(--navy);
+  display: grid; place-items: center; font-weight: 700;
+}
+
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 30px 34px 20px;
+}
+
+.topbar {
+  display: flex; justify-content: space-between; gap: 20px;
+  align-items: flex-start; margin-bottom: 28px;
+}
+.eyebrow {
+  display: block; color: #0b8b9d; font-size: 12px;
+  font-weight: 800; letter-spacing: 2px; margin-bottom: 5px;
+}
+.topbar h1 { font-family: Georgia, serif; font-size: 36px; margin: 0; color: var(--navy); }
+.top-actions { display: flex; gap: 10px; }
+
+.btn-primary {
+  background: var(--teal); border-color: var(--teal);
+}
+.btn-primary:hover { background: #067384; border-color: #067384; }
+
+.stat-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 4px 15px rgba(11,48,66,.04);
+}
+.stat-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 20px;
+}
+.stat-icon.scheduled { background: #e4f3f5; color: var(--teal); }
+.stat-icon.confirmed { background: #e4f8f4; color: #08a995; }
+.stat-icon.progress { background: #e8f2f6; color: #28758b; }
+.stat-icon.completed { background: #e9f7ef; color: #24885b; }
+.stat-card small { color: var(--muted); }
+.stat-card h3 { margin: 2px 0 0; color: var(--navy); }
+
+.panel {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px;
+  box-shadow: 0 4px 15px rgba(11,48,66,.035);
+}
+.panel-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.panel-header h5 { margin: 0; color: var(--navy); font-weight: 700; }
+.form-label { font-size: 13px; font-weight: 600; color: #405a66; }
+.form-label span { color: #dc3545; }
+.form-control, .form-select { border-color: #d3e0e3; border-radius: 9px; }
+.form-control:focus, .form-select:focus {
+  border-color: var(--teal); box-shadow: 0 0 0 .2rem rgba(7,135,154,.12);
+}
+
+.appointment-table th {
+  background: #f4f8f8; color: #617783; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .5px; white-space: nowrap;
+}
+.appointment-table td { font-size: 14px; }
+.patient-name { font-weight: 700; color: var(--navy); }
+.doctor-name { color: #48626e; }
+.reason-text { max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.status-badge {
+  border-radius: 30px; padding: 6px 9px; font-size: 10px;
+  font-weight: 800; letter-spacing: .3px; display: inline-block;
+}
+.status-SCHEDULED { background: #e5f3f5; color: #067789; }
+.status-CONFIRMED { background: #e2f7f2; color: #078e7d; }
+.status-CHECKED_IN { background: #e6f0f5; color: #286d82; }
+.status-IN_PROGRESS { background: #dff3f2; color: #087d79; }
+.status-COMPLETED { background: #e5f6ec; color: #28794f; }
+.status-CANCELLED, .status-NO_SHOW { background: #fde9e9; color: #b23a3a; }
+
+.action-btn { width: 32px; height: 32px; padding: 0; border-radius: 8px; }
+
+.empty-state { text-align: center; padding: 45px 20px; color: var(--muted); }
+.empty-state i { font-size: 38px; }
+.empty-state h6 { margin-top: 10px; color: var(--navy); }
+
+.availability-row {
+  padding: 13px 0; border-bottom: 1px solid #edf2f3;
+}
+.availability-row:last-child { border-bottom: 0; }
+.doctor-line { display: flex; justify-content: space-between; margin-bottom: 7px; }
+.doctor-line strong { color: var(--navy); }
+.slot-bar { height: 8px; background: #edf3f4; border-radius: 20px; overflow: hidden; }
+.slot-used { height: 100%; border-radius: 20px; background: var(--green); }
+.slot-info { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+.lifecycle { display: flex; flex-direction: column; align-items: stretch; gap: 5px; }
+.life-step {
+  padding: 11px; text-align: center; color: #fff; border-radius: 8px;
+  font-weight: 800; font-size: 12px;
+}
+.life-step.scheduled, .life-step.checked, .life-step.completed { background: #0a8799; }
+.life-step.confirmed, .life-step.progress { background: #08ae9e; }
+.lifecycle > i { align-self: center; color: #71868f; line-height: 12px; }
+.life-alternative {
+  text-align: center; padding: 9px; border-radius: 8px;
+  border: 1px dashed #e2aaaa; color: #ad4141; font-size: 11px;
+  font-weight: 800; margin-top: 3px;
+}
+
+.info-banner {
+  background: var(--navy); color: #fff; border-radius: 12px;
+  padding: 18px 22px; display: flex; align-items: flex-start; gap: 15px;
+}
+.info-banner i { font-size: 25px; color: #27c1b0; }
+.info-banner p { color: #d3e2e6; font-size: 14px; }
+
+.section-label {
+  font-size: 12px; font-weight: 800; letter-spacing: 1px;
+  color: var(--teal); text-transform: uppercase; margin-bottom: 12px;
+}
+
+.page-footer {
+  margin-top: 24px; color: #718792; font-size: 11px;
+  letter-spacing: 1.3px;
+}
+.page-footer span { margin: 0 6px; }
+
+.notification-dot {
+  position: absolute; width: 7px; height: 7px; border-radius: 50%;
+  background: #e44; top: 8px; right: 8px;
+}
+
+@media (max-width: 991px) {
+  .sidebar { transform: translateX(-100%); transition: transform .2s; }
+  .sidebar.show { transform: translateX(0); }
+  .main-content { margin-left: 0; width: 100%; padding: 22px 18px; }
+  .topbar { flex-direction: column; }
+  .top-actions { width: 100%; }
+  .top-actions .btn-primary { flex: 1; }
+}
+
+@media (max-width: 576px) {
+  .topbar h1 { font-size: 29px; }
+  .view-buttons { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-hospital"></i></div>
+      <div>
+        <h5 class="mb-0">HMS</h5>
+        <small>Hospital Management</small>
+      </div>
+    </div>
+
+    <nav class="nav flex-column mt-4">
+      <a class="nav-link" href="#"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a class="nav-link" href="#"><i class="bi bi-building"></i> Departments</a>
+      <a class="nav-link" href="#"><i class="bi bi-person-badge"></i> Doctors</a>
+      <a class="nav-link" href="#"><i class="bi bi-people"></i> Patients</a>
+      <a class="nav-link active" href="#"><i class="bi bi-calendar2-check"></i> Appointments</a>
+      <a class="nav-link" href="#"><i class="bi bi-file-earmark-medical"></i> Medical Records</a>
+      <a class="nav-link" href="#"><i class="bi bi-receipt"></i> Billing</a>
+      <a class="nav-link" href="#"><i class="bi bi-bar-chart"></i> Reports</a>
+      <a class="nav-link" href="#"><i class="bi bi-gear"></i> Settings</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="avatar">AD</div>
+        <div>
+          <strong>Admin</strong>
+          <small>Administrator</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-light d-lg-none" id="menuBtn">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <div>
+          <span class="eyebrow">CORE MODULE</span>
+          <h1>Appointment Management</h1>
+          <p class="text-muted mb-0">Book, manage and track patient appointments.</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-light position-relative">
+          <i class="bi bi-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal" onclick="prepareNewAppointment()">
+          <i class="bi bi-plus-lg me-1"></i> New Appointment
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon scheduled"><i class="bi bi-calendar-event"></i></div>
+          <div><small>Scheduled</small><h3 id="scheduledCount">0</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon confirmed"><i class="bi bi-check2-circle"></i></div>
+          <div><small>Confirmed</small><h3 id="confirmedCount">0</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon progress"><i class="bi bi-activity"></i></div>
+          <div><small>In Progress</small><h3 id="progressCount">0</h3></div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon completed"><i class="bi bi-patch-check"></i></div>
+          <div><small>Completed Today</small><h3 id="completedCount">0</h3></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="alertBox"></div>
+
+    <!-- Filters -->
+    <section class="panel mb-4">
+      <div class="panel-header">
+        <div>
+          <h5>Appointments</h5>
+          <small class="text-muted">Search and manage appointment records</small>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm" onclick="resetFilters()">
+          <i class="bi bi-arrow-clockwise"></i> Reset
+        </button>
+      </div>
+
+      <div class="row g-2 mt-2">
+        <div class="col-lg-3">
+          <label class="form-label">Search</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="searchInput" type="text" class="form-control" placeholder="Patient or doctor...">
+          </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <label class="form-label">Date</label>
+          <input id="dateFilter" type="date" class="form-control">
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <label class="form-label">Doctor</label>
+          <select id="doctorFilter" class="form-select">
+            <option value="">All doctors</option>
+          </select>
+        </div>
+        <div class="col-md-4 col-lg-2">
+          <label class="form-label">Status</label>
+          <select id="statusFilter" class="form-select">
+            <option value="">All status</option>
+            <option>SCHEDULED</option>
+            <option>CONFIRMED</option>
+            <option>CHECKED_IN</option>
+            <option>IN_PROGRESS</option>
+            <option>COMPLETED</option>
+            <option>CANCELLED</option>
+            <option>NO_SHOW</option>
+          </select>
+        </div>
+        <div class="col-lg-3 d-flex align-items-end">
+          <button class="btn btn-dark w-100" onclick="applyFilters()">
+            <i class="bi bi-funnel me-1"></i> Apply Filters
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Appointment Table -->
+    <section class="panel mb-4">
+      <div class="panel-header">
+        <div>
+          <h5>Appointment Queue</h5>
+          <small class="text-muted"><span id="resultCount">0</span> records found</small>
+        </div>
+        <div class="view-buttons">
+          <button class="btn btn-sm btn-primary"><i class="bi bi-list"></i> List</button>
+          <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-calendar3"></i> Calendar</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle appointment-table mb-0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date & Time</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentTableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state d-none">
+        <i class="bi bi-calendar-x"></i>
+        <h6>No appointments found</h6>
+        <p>Try changing the filters or create a new appointment.</p>
+      </div>
+    </section>
+
+    <div class="row g-4">
+      <!-- Availability -->
+      <div class="col-lg-6">
+        <section class="panel h-100">
+          <div class="panel-header">
+            <div>
+              <h5>Doctor Availability</h5>
+              <small class="text-muted">Time-slot management</small>
+            </div>
+            <span class="badge text-bg-light">Today</span>
+          </div>
+          <div id="availabilityList"></div>
+        </section>
+      </div>
+
+      <!-- Lifecycle -->
+      <div class="col-lg-6">
+        <section class="panel h-100">
+          <div class="panel-header">
+            <div>
+              <h5>Appointment Status Lifecycle</h5>
+              <small class="text-muted">Track each appointment from booking to completion</small>
+            </div>
+          </div>
+
+          <div class="lifecycle">
+            <div class="life-step scheduled">SCHEDULED</div>
+            <i class="bi bi-chevron-down"></i>
+            <div class="life-step confirmed">CONFIRMED</div>
+            <i class="bi bi-chevron-down"></i>
+            <div class="life-step checked">CHECKED_IN</div>
+            <i class="bi bi-chevron-down"></i>
+            <div class="life-step progress">IN_PROGRESS</div>
+            <i class="bi bi-chevron-down"></i>
+            <div class="life-step completed">COMPLETED</div>
+            <div class="life-alternative">CANCELLED / NO_SHOW</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="info-banner mt-4">
+      <i class="bi bi-shield-check"></i>
+      <div>
+        <strong>Booking validation</strong>
+        <p class="mb-0">The system checks doctor availability before creating an appointment and prevents duplicate time-slot bookings.</p>
+      </div>
+    </div>
+
+    <footer class="page-footer">HOSPITAL MANAGEMENT SYSTEM <span>•</span> Appointment Module</footer>
+  </main>
+</div>
+
+<!-- Create / Edit Appointment Modal -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form id="appointmentForm">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">APPOINTMENT</span>
+            <h5 class="modal-title" id="modalTitle">New Appointment</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" id="appointmentId">
+
+          <div class="section-label">Patient & Doctor</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Patient <span>*</span></label>
+              <select id="patient" class="form-select" required>
+                <option value="">Select patient</option>
+                <option>Rahul Kumar</option>
+                <option>Priya Sharma</option>
+                <option>Arjun Reddy</option>
+                <option>Sneha Rao</option>
+                <option>Vikram Singh</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Doctor <span>*</span></label>
+              <select id="doctor" class="form-select" required>
+                <option value="">Select doctor</option>
+                <option>Dr. Anil Kumar</option>
+                <option>Dr. Priya Reddy</option>
+                <option>Dr. Suresh Rao</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-label mt-4">Schedule</div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Date <span>*</span></label>
+              <input id="appointmentDate" type="date" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Time <span>*</span></label>
+              <input id="appointmentTime" type="time" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Status</label>
+              <select id="appointmentStatus" class="form-select">
+                <option>SCHEDULED</option>
+                <option>CONFIRMED</option>
+                <option>CHECKED_IN</option>
+                <option>IN_PROGRESS</option>
+                <option>COMPLETED</option>
+                <option>CANCELLED</option>
+                <option>NO_SHOW</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section-label mt-4">Appointment Details</div>
+          <div>
+            <label class="form-label">Reason / Symptoms</label>
+            <textarea id="reason" class="form-control" rows="3" placeholder="Enter appointment reason..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check2 me-1"></i> Save Appointment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// HMS Appointment Management - frontend demo
+// This version uses localStorage so the module works without a backend.
+// Later, replace localStorage functions with Spring Boot REST API calls.
+
+const STORAGE_KEY = "hms_appointments_v1";
+
+const doctors = [
+  { name: "Dr. Anil Kumar", department: "Cardiology", booked: 5, total: 8 },
+  { name: "Dr. Priya Reddy", department: "Pediatrics", booked: 3, total: 8 },
+  { name: "Dr. Suresh Rao", department: "General Medicine", booked: 6, total: 8 }
+];
+
+const today = new Date().toISOString().slice(0, 10);
+
+const demoAppointments = [
+  {
+    id: 1001, patient: "Rahul Kumar", doctor: "Dr. Anil Kumar",
+    appointmentDate: today, appointmentTime: "09:30",
+    reason: "Chest discomfort", status: "CONFIRMED"
+  },
+  {
+    id: 1002, patient: "Priya Sharma", doctor: "Dr. Priya Reddy",
+    appointmentDate: today, appointmentTime: "10:00",
+    reason: "Fever and cough", status: "CHECKED_IN"
+  },
+  {
+    id: 1003, patient: "Arjun Reddy", doctor: "Dr. Suresh Rao",
+    appointmentDate: today, appointmentTime: "10:30",
+    reason: "Routine consultation", status: "IN_PROGRESS"
+  },
+  {
+    id: 1004, patient: "Sneha Rao", doctor: "Dr. Anil Kumar",
+    appointmentDate: today, appointmentTime: "11:30",
+    reason: "Follow-up", status: "SCHEDULED"
+  },
+  {
+    id: 1005, patient: "Vikram Singh", doctor: "Dr. Suresh Rao",
+    appointmentDate: today, appointmentTime: "12:00",
+    reason: "Back pain", status: "COMPLETED"
+  }
+];
+
+let appointments = loadAppointments();
+let filteredAppointments = [...appointments];
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateDoctorFilter();
+  setDefaultDate();
+  bindEvents();
+  renderAll();
+});
+
+function loadAppointments() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) return JSON.parse(saved);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(demoAppointments));
+  return [...demoAppointments];
+}
+
+function saveAppointments() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+}
+
+function bindEvents() {
+  document.getElementById("searchInput").addEventListener("input", applyFilters);
+  document.getElementById("dateFilter").addEventListener("change", applyFilters);
+  document.getElementById("doctorFilter").addEventListener("change", applyFilters);
+  document.getElementById("statusFilter").addEventListener("change", applyFilters);
+  document.getElementById("appointmentForm").addEventListener("submit", saveAppointment);
+
+  document.getElementById("menuBtn")?.addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("show");
+  });
+}
+
+function populateDoctorFilter() {
+  const select = document.getElementById("doctorFilter");
+  doctors.forEach(d => {
+    const option = document.createElement("option");
+    option.value = d.name;
+    option.textContent = d.name;
+    select.appendChild(option);
+  });
+}
+
+function setDefaultDate() {
+  document.getElementById("dateFilter").value = today;
+}
+
+function renderAll() {
+  updateStats();
+  renderTable(filteredAppointments);
+  renderAvailability();
+}
+
+function updateStats() {
+  const todayAppointments = appointments.filter(a => a.appointmentDate === today);
+
+  document.getElementById("scheduledCount").textContent =
+    todayAppointments.filter(a => a.status === "SCHEDULED").length;
+
+  document.getElementById("confirmedCount").textContent =
+    todayAppointments.filter(a => a.status === "CONFIRMED").length;
+
+  document.getElementById("progressCount").textContent =
+    todayAppointments.filter(a => a.status === "IN_PROGRESS").length;
+
+  document.getElementById("completedCount").textContent =
+    todayAppointments.filter(a => a.status === "COMPLETED").length;
+}
+
+function renderTable(list) {
+  const body = document.getElementById("appointmentTableBody");
+  const empty = document.getElementById("emptyState");
+
+  body.innerHTML = "";
+  document.getElementById("resultCount").textContent = list.length;
+
+  if (!list.length) {
+    empty.classList.remove("d-none");
+    return;
+  }
+
+  empty.classList.add("d-none");
+
+  list
+    .sort((a, b) => `${a.appointmentDate}${a.appointmentTime}`.localeCompare(`${b.appointmentDate}${b.appointmentTime}`))
+    .forEach(a => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>#${a.id}</strong></td>
+        <td><div class="patient-name">${escapeHtml(a.patient)}</div></td>
+        <td><div class="doctor-name">${escapeHtml(a.doctor)}</div></td>
+        <td>
+          <strong>${formatDate(a.appointmentDate)}</strong><br>
+          <small class="text-muted">${a.appointmentTime}</small>
+        </td>
+        <td><span class="reason-text" title="${escapeHtml(a.reason || "")}">${escapeHtml(a.reason || "—")}</span></td>
+        <td><span class="status-badge status-${a.status}">${a.status.replace("_", " ")}</span></td>
+        <td class="text-end">
+          <div class="d-flex justify-content-end gap-1">
+            <button class="btn btn-light action-btn" title="Edit" onclick="editAppointment(${a.id})">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-light action-btn" title="Next status" onclick="advanceStatus(${a.id})">
+              <i class="bi bi-arrow-right"></i>
+            </button>
+            <button class="btn btn-light action-btn text-danger" title="Cancel" onclick="cancelAppointment(${a.id})">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </td>
+      `;
+      body.appendChild(tr);
+    });
+}
+
+function renderAvailability() {
+  const container = document.getElementById("availabilityList");
+  container.innerHTML = doctors.map(d => {
+    const percentage = Math.min(100, Math.round((d.booked / d.total) * 100));
+    const available = d.total - d.booked;
+    return `
+      <div class="availability-row">
+        <div class="doctor-line">
+          <strong>${escapeHtml(d.name)}</strong>
+          <span class="text-muted">${escapeHtml(d.department)}</span>
+        </div>
+        <div class="slot-bar"><div class="slot-used" style="width:${percentage}%"></div></div>
+        <div class="slot-info">${d.booked} booked • ${available} slots available</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function applyFilters() {
+  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+  const date = document.getElementById("dateFilter").value;
+  const doctor = document.getElementById("doctorFilter").value;
+  const status = document.getElementById("statusFilter").value;
+
+  filteredAppointments = appointments.filter(a => {
+    const matchesSearch =
+      !search ||
+      a.patient.toLowerCase().includes(search) ||
+      a.doctor.toLowerCase().includes(search);
+
+    const matchesDate = !date || a.appointmentDate === date;
+    const matchesDoctor = !doctor || a.doctor === doctor;
+    const matchesStatus = !status || a.status === status;
+
+    return matchesSearch && matchesDate && matchesDoctor && matchesStatus;
+  });
+
+  renderTable(filteredAppointments);
+}
+
+function resetFilters() {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("dateFilter").value = today;
+  document.getElementById("doctorFilter").value = "";
+  document.getElementById("statusFilter").value = "";
+  applyFilters();
+}
+
+function prepareNewAppointment() {
+  document.getElementById("appointmentForm").reset();
+  document.getElementById("appointmentId").value = "";
+  document.getElementById("modalTitle").textContent = "New Appointment";
+  document.getElementById("appointmentDate").value = today;
+  document.getElementById("appointmentStatus").value = "SCHEDULED";
+}
+
+function editAppointment(id) {
+  const a = appointments.find(x => x.id === id);
+  if (!a) return;
+
+  document.getElementById("appointmentId").value = a.id;
+  document.getElementById("patient").value = a.patient;
+  document.getElementById("doctor").value = a.doctor;
+  document.getElementById("appointmentDate").value = a.appointmentDate;
+  document.getElementById("appointmentTime").value = a.appointmentTime;
+  document.getElementById("appointmentStatus").value = a.status;
+  document.getElementById("reason").value = a.reason || "";
+  document.getElementById("modalTitle").textContent = "Edit Appointment";
+
+  bootstrap.Modal.getOrCreateInstance(document.getElementById("appointmentModal")).show();
+}
+
+function saveAppointment(event) {
+  event.preventDefault();
+
+  const id = document.getElementById("appointmentId").value;
+  const data = {
+    patient: document.getElementById("patient").value,
+    doctor: document.getElementById("doctor").value,
+    appointmentDate: document.getElementById("appointmentDate").value,
+    appointmentTime: document.getElementById("appointmentTime").value,
+    status: document.getElementById("appointmentStatus").value,
+    reason: document.getElementById("reason").value.trim()
+  };
+
+  if (!data.patient || !data.doctor || !data.appointmentDate || !data.appointmentTime) {
+    showAlert("Please fill all required fields.", "danger");
+    return;
+  }
+
+  // Prevent duplicate doctor time-slot booking.
+  const duplicate = appointments.some(a =>
+    a.id !== Number(id) &&
+    a.doctor === data.doctor &&
+    a.appointmentDate === data.appointmentDate &&
+    a.appointmentTime === data.appointmentTime &&
+    !["CANCELLED", "NO_SHOW"].includes(a.status)
+  );
+
+  if (duplicate) {
+    showAlert("This doctor already has an appointment at the selected date and time.", "danger");
+    return;
+  }
+
+  if (id) {
+    const index = appointments.findIndex(a => a.id === Number(id));
+    appointments[index] = { ...appointments[index], ...data };
+    showAlert("Appointment updated successfully.", "success");
+  } else {
+    const newAppointment = {
+      id: nextId(),
+      ...data
+    };
+    appointments.push(newAppointment);
+    showAlert("Appointment created successfully.", "success");
+  }
+
+  saveAppointments();
+  filteredAppointments = [...appointments];
+  applyFilters();
+
+  const modal = bootstrap.Modal.getInstance(document.getElementById("appointmentModal"));
+  modal?.hide();
+
+  document.getElementById("appointmentForm").reset();
+  updateStats();
+}
+
+function advanceStatus(id) {
+  const order = ["SCHEDULED", "CONFIRMED", "CHECKED_IN", "IN_PROGRESS", "COMPLETED"];
+  const a = appointments.find(x => x.id === id);
+  if (!a || ["CANCELLED", "NO_SHOW", "COMPLETED"].includes(a.status)) return;
+
+  const currentIndex = order.indexOf(a.status);
+  if (currentIndex < order.length - 1) {
+    a.status = order[currentIndex + 1];
+    saveAppointments();
+    applyFilters();
+    updateStats();
+    showAlert(`Appointment #${id} moved to ${a.status}.`, "success");
+  }
+}
+
+function cancelAppointment(id) {
+  const a = appointments.find(x => x.id === id);
+  if (!a) return;
+
+  if (!confirm(`Cancel appointment #${id}?`)) return;
+
+  a.status = "CANCELLED";
+  saveAppointments();
+  applyFilters();
+  updateStats();
+  showAlert(`Appointment #${id} cancelled.`, "warning");
+}
+
+function nextId() {
+  return appointments.reduce((max, a) => Math.max(max, Number(a.id)), 1000) + 1;
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  return new Date(value + "T00:00:00").toLocaleDateString("en-IN", {
+    day: "2-digit", month: "short", year: "numeric"
+  });
+}
+
+function showAlert(message, type) {
+  const box = document.getElementById("alertBox");
+  box.innerHTML = `
+    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+      ${escapeHtml(message)}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[char]));
+}
+
+// Optional browser-console helper for testing:
+// localStorage.removeItem(STORAGE_KEY); location.reload();
+
+</script>
+</body>
+</html>
