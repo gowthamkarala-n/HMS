@@ -299,7 +299,7 @@ Implemented via Spring AOP (Aspect-Oriented Programming). A custom `@Auditable` 
 - **API Security**: Rate limiting via Kong/Spring Cloud Gateway. CORS strictly configured.
 - **Compliance**: HIPAA/GDPR readiness via strict RBAC, audit logs, and data anonymization features.
 
-[Workflows](HMS/Workflows%203cb484c9eafb8096bc35e1fc35d35519.md)
+[Workflows](./HMS/Workflows%203cb484c9eafb8096bc35e1fc35d35519.md)
 
 [Patient Management](HMS/Patient%20Management%203cb484c9eafb80149f72f747c596f098.md)
 
