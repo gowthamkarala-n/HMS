@@ -299,24 +299,24 @@ Implemented via Spring AOP (Aspect-Oriented Programming). A custom `@Auditable` 
 - **API Security**: Rate limiting via Kong/Spring Cloud Gateway. CORS strictly configured.
 - **Compliance**: HIPAA/GDPR readiness via strict RBAC, audit logs, and data anonymization features.
 
-[Workflows](./HMS/Workflows%203cb484c9eafb8096bc35e1fc35d35519.md)
+[Workflows](./HMS/Workflows.md)
 
-[Patient Management](HMS/Patient%20Management%203cb484c9eafb80149f72f747c596f098.md)
+[Patient Management](HMS/Patient%20Management%20.md)
 
-[Staff Management ](HMS/Staff%20Management%203cb484c9eafb806aaf64d275d0ba8eb9.md)
+[Staff Management ](HMS/Staff%20Management.md)
 
-[Doctor Management](HMS/Doctor%20Management%203cb484c9eafb80c981c0db73bafecbce.md)
+[Doctor Management](HMS/Doctor%20Management.md)
 
-[Appointment & Queue Management](HMS/Appointment%20&%20Queue%20Management%203cb484c9eafb80efaad8c44868ce9c37.md)
+[Appointment & Queue Management](HMS/Appointment%20&%20Queue%20Management.md)
 
-[Consultation & EMR (Electronic Medical Records)](HMS/Consultation%20&%20EMR%20(Electronic%20Medical%20Records)%203cb484c9eafb80339505f3fa27b737fd.md)
+[Consultation & EMR (Electronic Medical Records)](HMS/Consultation%20&%20EMR%20(Electronic%20Medical%20Records).md)
 
-[Pharmacy & Dispensing](HMS/Pharmacy%20&%20Dispensing%203cb484c9eafb800cbd0bdf5169b36878.md)
+[Pharmacy & Dispensing](HMS/Pharmacy%20&%20Dispensing.md)
 
-[Laboratory & Diagnostics](HMS/Laboratory%20&%20Diagnostics%203cb484c9eafb801e9d4bf393751dae63.md)
+[Laboratory & Diagnostics](HMS/Laboratory%20&%20Diagnostics.md)
 
-[Inventory & Supply Chain](HMS/Inventory%20&%20Supply%20Chain%203cb484c9eafb80c997a6f1c1d7aeaa31.md)
+[Inventory & Supply Chain](HMS/Inventory%20&%20Supply%20Chain%20.md)
 
-[Billing & Financials](HMS/Billing%20&%20Financials%203cb484c9eafb800193add70b15caf389.md)
+[Billing & Financials](HMS/Billing%20&%20Financials.md)
 
-[Pharmacy Workflow](HMS/Pharmacy%20Workflow%203cb484c9eafb804c9bb9ff6da182cf83.md)
+[Pharmacy Workflow](HMS/Pharmacy%20Workflow%20.md)
